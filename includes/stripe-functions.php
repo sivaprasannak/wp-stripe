@@ -143,7 +143,17 @@ function wp_stripe_charge_initiate() {
             $paid = $response->paid;
             $fee = $response->fee;
 
-            $result =  '<div class="wp-stripe-notification wp-stripe-success"> ' . __('Success, you just transferred ', 'wp-stripe') . '<span class="wp-stripe-currency">' . $currency . '</span> ' . $amount . ' !</div>';
+		    $options = get_option('wp_stripe_options');
+			
+			//redirect using JavaScript if a success URL is set
+			if ( isset($options['action_success_redirect']) 
+					&& trim($options['action_success_redirect']) !== '') {
+				
+				$result =  '<div class="wp-stripe-notification wp-stripe-success"> ' . __('Success! Thank you. Please wait while the page loads.', 'wp-stripe') . '</div>
+					<script type="text/javascript">parent.window.location = "' . $options['action_success_redirect'] . '";</script>';
+			}else{
+				$result =  '<div class="wp-stripe-notification wp-stripe-success"> ' . __('Success, you just transferred ', 'wp-stripe') . '<span class="wp-stripe-currency">' . $currency . '</span> ' . $amount . ' !</div>';
+			}
 
             // Save Charge
 
@@ -196,7 +206,22 @@ function wp_stripe_charge_initiate() {
 
                 // wp_stripe_update_project_transactions( 'add', $project_id , $post_id );
 
-            }
+				//send success email
+				if ( isset($options['email_confirmation_send']) 
+						&& $options['email_confirmation_send'] == 'Yes') {
+
+					$headers[] = 'From: ' . $options['email_confirmation_from_name'] . ' <' . $options['email_confirmation_from_email'] . '>';
+					$headers[] = 'Bcc: ' . $options['email_confirmation_from_name'] . ' <' . $options['email_confirmation_from_email'] . '>';
+
+					//replace amount placeholder in the message
+					$message = $options['email_confirmation_message'];
+					$message = str_ireplace('%Amount%', $amount, $message);
+					$message = str_ireplace('%Name%', $name, $message);
+					
+					wp_mail( $email, $options['email_confirmation_subject'], $message, $headers );
+					
+				}
+			}
 
         // Error
 

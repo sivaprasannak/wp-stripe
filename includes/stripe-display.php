@@ -13,6 +13,22 @@ function wp_stripe_form() {
 
     ob_start();
 
+	
+	
+	if($_SERVER['REQUEST_METHOD'] == "POST") {
+		$name = $_POST['wp_stripe_name'];
+		$email = $_POST['wp_stripe_email'];
+	}else{
+		$current_user = wp_get_current_user();
+		if ( is_user_logged_in() ) {
+			$email = $current_user->user_email;
+			$name = trim("{$current_user->user_firstname} {$current_user->user_lastname}");
+		}else{
+			$email = '';
+			$name = '';
+		}
+	}
+	
     ?>
 
     <!-- Start WP-Stripe -->
@@ -29,11 +45,11 @@ function wp_stripe_form() {
         <div class="wp-stripe-notification wp-stripe-failure payment-errors" style="display:none"></div>
 
         <div class="stripe-row">
-                <input type="text" name="wp_stripe_name" class="wp-stripe-name" placeholder="<?php _e('Name', 'wp-stripe'); ?> *" autofocus required />
+                <input type="text" name="wp_stripe_name" class="wp-stripe-name" placeholder="<?php _e('Name', 'wp-stripe'); ?> *" value="<?php echo $name; ?>" autofocus required />
         </div>
 
         <div class="stripe-row">
-                <input type="email" name="wp_stripe_email" class="wp-stripe-email" placeholder="<?php _e('E-mail', 'wp-stripe'); ?>" />
+                <input type="email" name="wp_stripe_email" class="wp-stripe-email" placeholder="<?php _e('E-mail', 'wp-stripe'); ?>" value="<?php echo $email; ?>" />
         </div>
 
         <div class="stripe-row">

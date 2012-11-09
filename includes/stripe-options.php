@@ -9,7 +9,7 @@
 
 function wp_stripe_options_init() {
 
-        register_setting( 'wp_stripe_options', 'wp_stripe_options' );
+		register_setting( 'wp_stripe_options', 'wp_stripe_options' );
         add_settings_section( 'wp_stripe_section_main', '', 'wp_stripe_options_header', 'wp_stripe_section' );
         add_settings_field( 'stripe_header', 'Payment Form Header', 'wp_stripe_field_header', 'wp_stripe_section', 'wp_stripe_section_main' );
         add_settings_field( 'stripe_recent_switch', 'Enable Recent Widget?', 'wp_stripe_field_recent', 'wp_stripe_section', 'wp_stripe_section_main' );
@@ -22,6 +22,15 @@ function wp_stripe_options_init() {
         add_settings_field( 'stripe_prod_api_publish', 'API Publishable Key (Production Environment)', 'wp_stripe_field_prod_publish', 'wp_stripe_section', 'wp_stripe_section_api' );
         add_settings_section( 'wp_stripe_section_ssl', '', 'wp_stripe_options_header_ssl', 'wp_stripe_section' );
         add_settings_field( 'stripe_modal_ssl', 'Enable SSL for modal pop-up?', 'wp_stripe_field_ssl', 'wp_stripe_section', 'wp_stripe_section_ssl' );
+        add_settings_section( 'wp_stripe_section_email_confirmation', '', 'wp_stripe_options_header_email_confirmation', 'wp_stripe_section' );
+        add_settings_field( 'email_confirmation_send', 'Send an email confirmation?', 'wp_stripe_field_email_confirmation_send', 'wp_stripe_section', 'wp_stripe_section_email_confirmation' );
+        add_settings_field( 'email_confirmation_from_name', 'From name', 'wp_stripe_field_email_confirmation_from_name', 'wp_stripe_section', 'wp_stripe_section_email_confirmation' );
+        add_settings_field( 'email_confirmation_from_email', 'From email', 'wp_stripe_field_email_confirmation_from_email', 'wp_stripe_section', 'wp_stripe_section_email_confirmation' );
+        add_settings_field( 'email_confirmation_subject', 'Subject', 'wp_stripe_field_email_confirmation_subject', 'wp_stripe_section', 'wp_stripe_section_email_confirmation' );
+        add_settings_field( 'email_confirmation_message', 'Message', 'wp_stripe_field_email_confirmation_message', 'wp_stripe_section', 'wp_stripe_section_email_confirmation' );
+        add_settings_section( 'wp_stripe_section_action', '', 'wp_stripe_options_header_action', 'wp_stripe_section' );
+        add_settings_field( 'action_success_redirect', 'Optional URL to redirect on successful transaction', 'wp_stripe_field_action_success_redirect', 'wp_stripe_section', 'wp_stripe_section_action' );
+		
 }
 
 /**
@@ -61,6 +70,25 @@ function wp_stripe_options_header_ssl () {
 
 }
 
+function wp_stripe_options_header_email_confirmation () {
+
+    ?>
+
+    <h2>Email Confirmation</h2>
+
+    <?php
+
+}
+
+function wp_stripe_options_header_action () {
+
+    ?>
+
+    <h2>Actions</h2>
+
+    <?php
+
+}
 /**
  * Individual Fields
  *
@@ -166,6 +194,63 @@ function wp_stripe_field_ssl () {
     echo "</select>";
 
 }
+
+function wp_stripe_field_email_confirmation_send () {
+
+    $options = get_option( 'wp_stripe_options' );
+    $items = array( 'Yes', 'No' );
+    echo "<select id='email_confirmation_send' name='wp_stripe_options[email_confirmation_send]'>";
+
+    foreach( $items as $item ) {
+        $selected = ($options['email_confirmation_send']==$item) ? 'selected="selected"' : '';
+        echo "<option value='$item' $selected>$item</option>";
+    }
+
+    echo "</select>";
+
+}
+
+function wp_stripe_field_email_confirmation_from_name () {
+
+        $options = get_option( 'wp_stripe_options' );
+        $value = $options['email_confirmation_from_name'];
+        echo "<input id='setting_api' name='wp_stripe_options[email_confirmation_from_name]' type='text' size='40' value='$value' />";
+
+}
+
+function wp_stripe_field_email_confirmation_from_email () {
+
+        $options = get_option( 'wp_stripe_options' );
+        $value = $options['email_confirmation_from_email'];
+        echo "<input id='setting_api' name='wp_stripe_options[email_confirmation_from_email]' type='email' size='40' value='$value' />";
+
+}
+
+function wp_stripe_field_email_confirmation_subject () {
+
+        $options = get_option( 'wp_stripe_options' );
+        $value = $options['email_confirmation_subject'];
+        echo "<input id='setting_api' name='wp_stripe_options[email_confirmation_subject]' type='text' size='40' value='$value' />";
+
+}
+
+function wp_stripe_field_email_confirmation_message () {
+
+        $options = get_option( 'wp_stripe_options' );
+        $value = $options['email_confirmation_message'];
+        echo "<textarea id='setting_api' name='wp_stripe_options[email_confirmation_message]' style='width:500px; height:200px;'>$value</textarea>";
+}
+
+//If filled in, the page will redirect after a successful transaction.
+//If left blank, the normal success message will be displayed.
+function wp_stripe_field_action_success_redirect () {
+
+        $options = get_option( 'wp_stripe_options' );
+        $value = $options['action_success_redirect'];
+        echo "<input id='setting_api' name='wp_stripe_options[action_success_redirect]' type='text' size='40' value='$value' />";
+
+}
+
 
 /**
  * Register Options Page
@@ -312,6 +397,19 @@ function wp_stripe_options_page() {
 
 function wp_stripe_delete_tests() {
 
+	//hide the donation from public view
+	if ( isset($_POST['wp_stripe_hide'] ) ) {
+		update_post_meta( $_POST['wp_stripe_postid'], 'wp-stripe-public', $public);
+		
+		//"update" the post with the same info so the cache gets cleared
+		$hide_post = array();
+		$hide_post['ID'] = $_POST['wp_stripe_postid'];
+
+		// Update the post into the database
+		wp_update_post( $hide_post );
+	}
+	
+	//remove all tests
     if ( isset($_POST['wp_stripe_delete_tests'] ) == '1') {
 
         // Query Custom Post Types
