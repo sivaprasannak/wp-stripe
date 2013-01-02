@@ -78,7 +78,7 @@ function wp_stripe_options_display_trx() {
 
             $img = get_avatar( $email, 32 );
             $person = $img . ' <span class="stripe-name">' . $name . ' <a href="mailto:' . $email . '">'.$email.'</a></span>';
-			if ($public) {
+			if ($public == "YES") {
 				$person .= '<form method="POST">
 					<input type="hidden" value="' . $id . '" name="wp_stripe_postid">
 					<input type="submit" value="Hide from public view" name="wp_stripe_hide" id="wp_stripe_hide">

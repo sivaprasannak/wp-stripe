@@ -399,7 +399,7 @@ function wp_stripe_delete_tests() {
 
 	//hide the donation from public view
 	if ( isset($_POST['wp_stripe_hide'] ) ) {
-		update_post_meta( $_POST['wp_stripe_postid'], 'wp-stripe-public', $public);
+		update_post_meta( $_POST['wp_stripe_postid'], 'wp-stripe-public', "NO");
 		
 		//"update" the post with the same info so the cache gets cleared
 		$hide_post = array();

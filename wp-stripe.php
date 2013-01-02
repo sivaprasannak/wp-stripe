@@ -4,7 +4,7 @@ Plugin Name: WP Stripe Extended by Michael Khalili
 Plugin URI: https://github.com/MichaelApproved/wp-stripe
 Description: Accept donations directly on your own webpage using Stripe payments, an alternative to PayPal. This is an extended version of "WP Stripe" by Noel Tock.
 Author: Michael Khalili
-Version: 1.5.0
+Version: 1.5.1
 Author URI: http://www.michaelapproved.com
 */
 
@@ -15,7 +15,7 @@ Author URI: http://www.michaelapproved.com
 // Defines
 // -----------------------------------------------------
 
-define ( 'WP_STRIPE_VERSION', '1.5.0' );
+define ( 'WP_STRIPE_VERSION', '1.5.1' );
 define ( 'WP_STRIPE_PATH',  WP_PLUGIN_URL . '/' . end( explode( DIRECTORY_SEPARATOR, dirname( __FILE__ ) ) ) );
 
 // Load PHP Lib - https://github.com/stripe/stripe-php
