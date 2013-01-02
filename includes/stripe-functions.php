@@ -35,6 +35,25 @@ function wp_stripe_shortcode( $atts ){
 }
 add_shortcode( 'wp-stripe', 'wp_stripe_shortcode' );
 
+
+function wp_stripe_embedded_shortcode( $atts ){
+
+    $options = get_option('wp_stripe_options');
+
+    $settings = '?keepThis=true&TB_iframe=true&height=580&width=400';
+    $path = WP_STRIPE_PATH . '/includes/stripe-iframe.php'. $settings;
+    $count = 1;
+
+    if ( $options['stripe_modal_ssl'] == 'Yes' ) {
+        $path = str_replace("http", "https", $path, $count);
+    }
+
+    return '<iframe class="wp-stripe-embedded-frame" src="' . $path . '" scrollng="no" frameborder="0" width="440" height="700"></iframe>';
+
+}
+add_shortcode( 'wp-stripe-embedded', 'wp_stripe_embedded_shortcode' );
+
+
 /**
  * Display Legacy Stripe form in-line
  *
