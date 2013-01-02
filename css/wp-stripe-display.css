@@ -79,11 +79,6 @@ form#wp-stripe-payment-form p.stripe-display-comment {
         color:#777;
 }
 
-form#wp-stripe-payment-form label {
-        letter-spacing:1px;
-        text-transform:uppercase;
-}
-
 form#wp-stripe-payment-form .stripe-row {
         overflow:visible;
         clear:both;

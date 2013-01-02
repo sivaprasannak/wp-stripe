@@ -134,7 +134,6 @@ function wp_stripe_charge_initiate() {
 
         // Define/Extract Variables
 
-        $public = $_POST['wp_stripe_public'];
         $name = $_POST['wp_stripe_name'];
         $email = $_POST['wp_stripe_email'];
         $amount = str_replace('$', '', $_POST['wp_stripe_amount']) * 100;
@@ -143,9 +142,11 @@ function wp_stripe_charge_initiate() {
         if ( !$_POST['wp_stripe_comment'] ) {
             $stripe_comment = __('E-mail: ', 'wp-stipe') . $_POST['wp_stripe_email'] . ' - ' . __('This transaction has no additional details', 'wp-stripe');
             $widget_comment = '';
+            $public = 'NO';
         } else {
             $stripe_comment = __('E-mail: ', 'wp-stipe') . $_POST['wp_stripe_email'] . ' - ' . $_POST['wp_stripe_comment'];
             $widget_comment = $_POST['wp_stripe_comment'];
+            $public = 'YES';
         }
 
         // Create Charge
@@ -195,14 +196,6 @@ function wp_stripe_charge_initiate() {
                     $live = 'LIVE';
                 } else {
                     $live = 'TEST';
-                }
-
-                // Define Public (for Widget)
-
-                if ( $public == 'public' ) {
-                    $public = 'YES';
-                } else {
-                    $public = 'NO';
                 }
 
                 // Update Meta

@@ -1,17 +1,21 @@
 <?php
 /*
-Plugin Name: WP Stripe
-Plugin URI: http://wordpress.org/extend/plugins/wp-stripe/
-Description: Integration of the payment system Stripe as an alternative to PayPal.
-Author: Noel Tock
-Version: 1.4.6
-Author URI: http://www.noeltock.com
+Plugin Name: WP Stripe Extended by Michael Khalili
+Plugin URI: https://github.com/MichaelApproved/wp-stripe
+Description: Accept donations directly on your own webpage using Stripe payments, an alternative to PayPal. This is an extended version of "WP Stripe" by Noel Tock.
+Author: Michael Khalili
+Version: 1.5.0
+Author URI: http://www.michaelapproved.com
 */
+
+/* 
+ * Original version of WP Stripe available at http://wordpress.org/extend/plugins/wp-stripe/
+ */
 
 // Defines
 // -----------------------------------------------------
 
-define ( 'WP_STRIPE_VERSION', '1.4.6' );
+define ( 'WP_STRIPE_VERSION', '1.5.0' );
 define ( 'WP_STRIPE_PATH',  WP_PLUGIN_URL . '/' . end( explode( DIRECTORY_SEPARATOR, dirname( __FILE__ ) ) ) );
 
 // Load PHP Lib - https://github.com/stripe/stripe-php
