@@ -3,7 +3,9 @@
 // Display Stripe iFrame Page
 
 define('WP_USE_THEMES', false);
-require('../../../../wp-blog-header.php');
+//getting 404 with wp-blog-header.php so switching to wp-load
+//http://wordpress.org/support/topic/integrating-wp-in-external-php-pages
+require('../../../../wp-load.php');
 
 header('Content-Type: text/html; charset=' . get_bloginfo( 'charset') );
 
@@ -26,6 +28,14 @@ header('Content-Type: text/html; charset=' . get_bloginfo( 'charset') );
             var wpstripekey = '<?php echo WP_STRIPE_KEY; ?>';
             //]]>;
         </script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script type="text/javascript">
+			setInterval('resizeParent();', 1000);
+			function resizeParent() {
+				var height = jQuery("html").outerHeight();
+				parent.wp_stripe_SetIFrameHeight(height);
+			}
+		</script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ></script>
         <script src="https://js.stripe.com/v1/"></script>

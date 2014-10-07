@@ -16,7 +16,7 @@ Author URI: http://www.michaelapproved.com
 // -----------------------------------------------------
 
 define ( 'WP_STRIPE_VERSION', '1.5.1' );
-define ( 'WP_STRIPE_PATH',  WP_PLUGIN_URL . '/' . end( explode( DIRECTORY_SEPARATOR, dirname( __FILE__ ) ) ) );
+define ( 'WP_STRIPE_PATH',  plugins_url('', __FILE__ ));
 
 // Load PHP Lib - https://github.com/stripe/stripe-php
 // -----------------------------------------------------
@@ -30,6 +30,7 @@ if (!class_exists('Stripe')) {
 
 include_once('includes/stripe-cpt.php');
 include_once('includes/stripe-options-transactions.php');
+include_once('includes/stripe-options-campaigns.php');
 include_once('includes/stripe-options.php');
 include_once('includes/stripe-functions.php');
 include_once('includes/stripe-display.php');

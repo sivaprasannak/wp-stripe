@@ -34,6 +34,27 @@ function wp_stripe_options_display_trx() {
             'paged' => retrievePage()
         );
 
+		$campaignsFilterCurrent = isset($_POST['wp_stripe_campaigns_filter']) ? $_POST['wp_stripe_campaigns_filter'] : '';
+		//show only those which don't have the meta key value (unassigned to a campaign)
+		if ($campaignsFilterCurrent == 'unassigned') {
+			//if it's not in a campaign, the key won't exist.
+			$args['meta_query'] = array(
+				array(
+					'key' => 'wp-stripe-campaign',
+					'value'   => '',
+					'compare' => 'NOT EXISTS'
+				)
+			);
+		}else if (is_numeric($campaignsFilterCurrent)) {
+			$args['meta_query'] = array(
+				array(
+					'key' => 'wp-stripe-campaign',
+					'value'   => $campaignsFilterCurrent,
+					'compare' => 'IN'
+				)
+			);
+		}
+		
         // - query -
         $my_query = null;
         $my_query = new WP_query( $args );
@@ -58,7 +79,20 @@ function wp_stripe_options_display_trx() {
             $fee = ($custom["wp-stripe-fee"][0])/100;
             $net = round($amount - $fee,2);
 
-            echo '<tr>';
+			$campaignId = $custom["wp-stripe-campaign"][0];
+
+			//lookup the campaign name if it's a donation for a campaign
+			if (is_numeric($campaignId)) {
+				$campaignName = get_the_title($campaignId);
+				$campaignNameMaxLength = 18;
+				if (strlen($campaignName) > $campaignNameMaxLength) {
+					$campaignName = substr($campaignName,0, $campaignNameMaxLength - 3) . '...';
+				}
+			}else{
+				$campaignName = '';
+			}
+			
+			echo '<tr>';
 
             // Dot
 
@@ -95,6 +129,7 @@ function wp_stripe_options_display_trx() {
             echo '<td>' . $person . '</td>';
             echo '<td>' . $received . '</td>';
             echo '<td>' . $cleandate . ' - ' . $cleantime . '</td>';
+            echo '<td>' . $campaignName . '</td>';
             echo '<td class="stripe-comment">"' . $content . '"</td>';
 
             echo '</tr>';
@@ -126,8 +161,10 @@ function wp_stripe_options_display_trx() {
     $totalpages = totalPages($my_query->found_posts);
 
     if ( $currentpage > 1 ) {
+		$campaignsFilterCurrent = isset($_POST['wp_stripe_campaigns_filter']) ? $_POST['wp_stripe_campaigns_filter'] : '';
 
         echo '<form method="POST" class="pagination">';
+		echo '<input type="hidden" name="wp_stripe_campaigns_filter" value="' . $campaignsFilterCurrent . '" />';
         echo '<input type="hidden" name="pagination" value="' . ( retrievePage() - 1 ) . '" />';
         echo '<input type="submit" value="Previous 10" />';
         echo '</form>';
@@ -135,8 +172,10 @@ function wp_stripe_options_display_trx() {
     }
 
     if ( $currentpage < $totalpages ) {
+		$campaignsFilterCurrent = isset($_POST['wp_stripe_campaigns_filter']) ? $_POST['wp_stripe_campaigns_filter'] : '';
 
         echo '<form method="POST" class="pagination">';
+		echo '<input type="hidden" name="wp_stripe_campaigns_filter" value="' . $campaignsFilterCurrent . '" />';
         echo '<input type="hidden" name="pagination" value="' . ( retrievePage() + 1 ) . '" />';
         echo '<input type="submit" value="Next 10" />';
         echo '</form>';

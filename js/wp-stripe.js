@@ -113,6 +113,11 @@ jQuery(document).ready(function($) {
 
     });
 
+	//resize the stripe payment iframe
+	wp_stripe_SetIFrameHeight = function(height) {
+		$(".wp-stripe-embedded-frame").height(height);
+	}
+
 });
 
 //jQuery iframe resizer version 1.90 for the embedded iframe shortcode.

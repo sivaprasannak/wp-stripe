@@ -1,7 +1,7 @@
 <?php
 
 // Custom Post Type - Transactions
-// Custom Post Type - Projects
+// Custom Post Type - Campaigns
 
 function create_wp_stripe_cpt_trx() {
     
@@ -32,21 +32,21 @@ function create_wp_stripe_cpt_trx() {
     
 }
 
-// Custom Post Type - Projects
+// Custom Post Type - Campaigns
 
-function create_wp_stripe_cpt_projects() {
+function create_wp_stripe_cpt_campaigns() {
 
     $labels = array(
-        'name'                  => _x('Stripe Projects', ''),
-        'singular_name'         => _x('Project', 'post type singular name'),
-        'add_new'               => _x('Add New', 'Payments'),
-        'add_new_item'          => __('Add New Project'),
-        'edit_item'             => __('Edit Project'),
-        'new_item'              => __('New Project'),
-        'view_item'             => __('View Project'),
-        'search_items'          => __('Search Projects'),
-        'not_found'             => __('No Projects found'),
-        'not_found_in_trash'    => __('No Projects found in Trash'),
+        'name'                  => _x('Stripe Campaigns', ''),
+        'singular_name'         => _x('Campaign', 'post type singular name'),
+        'add_new'               => _x('Add New', 'Campaigns'),
+        'add_new_item'          => __('Add New Campaign'),
+        'edit_item'             => __('Edit Campaign'),
+        'new_item'              => __('New Campaign'),
+        'view_item'             => __('View Campaign'),
+        'search_items'          => __('Search Campaigns'),
+        'not_found'             => __('No Campaigns found'),
+        'not_found_in_trash'    => __('No Campaigns found in Trash'),
         'parent_item_colon'     => '',
     );
 
@@ -59,11 +59,11 @@ function create_wp_stripe_cpt_projects() {
         'supports'		    => array( 'title', 'editor', 'thumbnail' )
     );
 
-    register_post_type( 'wp-stripe-projects', $args);
+    register_post_type( 'wp-stripe-campaigns', $args);
 
 }
 
 add_action( 'init', 'create_wp_stripe_cpt_trx' );
-add_action( 'init', 'create_wp_stripe_cpt_projects' );
+add_action( 'init', 'create_wp_stripe_cpt_campaigns' );
 
 ?>

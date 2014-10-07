@@ -13,7 +13,8 @@ function wp_stripe_form() {
 
     ob_start();
 
-	
+	$campaignId = isset($_GET['campaign']) && is_numeric($_GET['campaign']) ? $_GET['campaign'] : "";
+
 	
 	if($_SERVER['REQUEST_METHOD'] == "POST") {
 		$name = $_POST['wp_stripe_name'];
@@ -37,6 +38,7 @@ function wp_stripe_form() {
 
     <form id="wp-stripe-payment-form">
 
+	<input type="hidden" name="campaignId" value="<?php echo $campaignId; ?>" />
     <input type="hidden" name="action" value="wp_stripe_charge_initiate" />
     <input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'wp-stripe-nonce' ); ?>" />
 
@@ -73,7 +75,7 @@ function wp_stripe_form() {
                 <input type="text" autocomplete="off" class="card-cvc" placeholder="<?php _e('CVC Number', 'wp-stripe'); ?> *" maxlength="4" required />
             </div>
             <div class="stripe-row-right">
-                <span class="stripe-expiry">EXPIRY</span>
+                <span class="stripe-expiry">Exp.</span>
                 <select class="card-expiry-month">
                     <option value="1">01</option>
                     <option value="2">02</option>
@@ -111,7 +113,7 @@ function wp_stripe_form() {
 
         <div class="stripe-row">
 
-            <p class="stripe-display-comment"><?php _e('If you add a public comment, your name, avatar (from gravatar.com) and comment will be shown in recent donations section of this website. Your e-mail address and donation amount will not be shown.', 'wp-stripe'); ?></p>
+            <p class="stripe-display-comment"><?php _e('If you add a public comment, your name and comment will be displayed. Your e-mail address and donation amount will not be shown.', 'wp-stripe'); ?></p>
 
         </div>
 
