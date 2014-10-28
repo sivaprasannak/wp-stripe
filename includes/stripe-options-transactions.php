@@ -58,6 +58,24 @@ function wp_stripe_options_display_trx() {
         // - query -
         $my_query = null;
         $my_query = new WP_query( $args );
+		
+		//On refund button click
+        if(isset($_POST['wp_stripe_refund_id']))
+            {
+          
+                $id = $_POST['wp_stripe_refund_id'];
+                $ch = Stripe_Charge::retrieve($id);
+                $response = $ch->refund();
+                
+            
+                update_post_meta( $_POST['wp_stripe_refund_post_id'], 'wp-stripe-refund', 'true');
+                
+                if($_POST['wp_stripe_refund_campaign_id'] != '')
+                {
+                    $refund_campaign=get_post_custom($_POST['wp_stripe_refund_campaign_id']);
+                    update_post_meta( $_POST['wp_stripe_refund_campaign_id'], 'wp-stripe-campaign-raised', ($refund_campaign["wp-stripe-campaign-raised"][0]- $_POST['wp_stripe_refund_amount']) , $refund_campaign["wp-stripe-campaign-raised"][0] );
+                }   
+            }
 
         while ( $my_query->have_posts() ) : $my_query->the_post();
 
@@ -120,8 +138,24 @@ function wp_stripe_options_display_trx() {
 			}
 
             // Received
-
-            $received = '<span class="stripe-netamount"> + ' . $net . '</span> (-' . $fee . ')';
+            //Checks the transaction have been refunded or not by the meta added to the post
+            //Inserts the refund button or Refunded text
+            
+            if(get_post_meta($id,'wp-stripe-refund',true)=='')
+            {
+                $received = '<span class="stripe-netamount"> + ' . $net . '</span> (-' . $fee . ')
+                                <form method="post">
+                                <input type="hidden" name="wp_stripe_refund_id" value='. $my_query->post->post_title .'>
+                                <input type="hidden" name="wp_stripe_refund_post_id" value='. $id .'>
+                                <input type="hidden" name="wp_stripe_refund_campaign_id" value='. $campaignId .'>
+                                <input type="hidden" name="wp_stripe_refund_amount" value='. $amount .'>
+                                <input type="submit" value="Refund">
+                                </form> ';
+            }
+            else
+            {
+                $received = '<span class="stripe-refundamount">  ' . $net . '</span> (-' . $fee . ')<p>Refunded</p>';   
+            }
 
             // Content
 
@@ -144,7 +178,7 @@ function wp_stripe_options_display_trx() {
 <?php
 
     function totalPages($transactions) {
-
+	
         // get total pages
 
         if ( $transactions > 0 ) {

@@ -172,6 +172,12 @@ table.wp-stripe-transactions span.stripe-netamount {
     font-size:14px;
 }
 
+table.wp-stripe-transactions span.stripe-refundamount {
+    color:#FF0000;
+    font-weight:bold;
+    font-size:14px;
+}
+
 table.wp-stripe-campaigns th:first-child,
 table.wp-stripe-transactions th:first-child {
     -moz-border-radius-topleft: 7px;
