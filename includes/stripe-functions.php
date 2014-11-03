@@ -80,14 +80,14 @@ add_shortcode('wp-legacy-stripe', 'wp_stripe_shortcode_legacy');
  * Create Charge using Stripe PHP Library
  *
  * @param $amount int transaction amount in cents (i.e. $1 = '100')
- * @param $card string
+ * @param $customer_id string
  * @param $description string
  * @return array
  *
  * @since 1.0
  *
  */
-function wp_stripe_charge($amount, $card, $name, $description) {
+function wp_stripe_charge($amount, $customer_id, $name, $description) {
 
 	/*
 	 * Currency - All amounts must be denominated in USD when creating charges with Stripe — the currency conversion happens automatically
@@ -96,11 +96,11 @@ function wp_stripe_charge($amount, $card, $name, $description) {
 	$currency = 'usd';
 
 	/*
-	 * Card - Token from stripe.js is provided (not individual card elements)
+	 * customer_id is provided (not individual card elements)
 	 */
 
 	$charge = array(
-		'card' => $card,
+		'customer' => $customer_id,
 		'amount' => $amount,
 		'currency' => $currency,
 	);
@@ -186,7 +186,17 @@ function wp_stripe_charge_initiate() {
 
 		try {
 
-			$response = wp_stripe_charge($amount, $card, $name, $stripe_comment);
+			//Create Customer
+			$customer_id = create_customer($email,$card);
+			
+			//Check Recurring
+			if(isset($_POST["isrecurring"]) )
+			{
+			    make_payment_recurring($customer_id,$name,$amount);
+			}
+			
+            // Create Charge
+			$response = wp_stripe_charge($amount, $customer_id, $name, $stripe_comment);
 
 			$id = $response->id;
 			$amount = ($response->amount) / 100;
@@ -286,5 +296,71 @@ function wp_stripe_charge_initiate() {
 	echo json_encode($result);
 	exit;
 }
+	function getRandomCode()
+		{
+			while(empty($code))
+			{
+				$scramble = md5(AUTH_KEY . current_time('timestamp') . SECURE_AUTH_KEY);
+				$code = substr($scramble, 0, 10);
+								
+				if(is_numeric($code))
+					$code = NULL;
+			}
+			return strtoupper($code);
+		}
+		
+	function create_customer($email,$card)
+	{
+	        $response_customer="";
+			$customer_exists="";
+			$customers_list = Stripe_Customer::all();
+			
+			foreach ($customers_list->data as $value ) {
+			  if($value-> email == $email)
+			  {
+				$customer_exists=$value-> id;
+			  }
+			}
+			if($customer_exists=="")
+			{
+				$response_customer = Stripe_Customer::create(array(
+				  "description" => $_POST["wp_stripe_name"]."(".$_POST["wp_stripe_email"].")",
+				  "card" => $card,
+				  "email"=> $email
+				));
+			}
+			else
+			{
+				$response_customer = Stripe_Customer::retrieve($customer_exists);
+				$response_customer->description = $_POST["wp_stripe_name"]."(".$_POST["wp_stripe_email"].")";
+				$response_customer->card = $card; 
+				$response_customer->save();
+			}
+			
+			return $response_customer->id;
+	}
+	
+	function make_payment_recurring($customer_id,$name,$amount)
+	{
+        $code = getRandomCode();
 
+		//Create a Plan
+        $response_plan = Stripe_Plan::create(array(
+        "amount" => $amount,
+        "interval" => "month",
+        "name" => $name." for order ".$code,
+        "trial_period_days" => 30,
+        "currency" => "usd",
+        "id" => $code)
+		);
+		
+		//subscribe a customer to plan
+		$cu = Stripe_Customer::retrieve($customer_id);
+		$cu->updateSubscription(array("plan" => $code));
+		
+		//Delete a Plan
+		$plan = Stripe_Plan::retrieve($code);
+        $plan->delete();
+			
+	}
 ?>

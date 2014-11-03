@@ -67,6 +67,10 @@ function wp_stripe_form() {
         </div>
 
         <div class="stripe-row">
+            <input id="recurring" type="checkbox" name="isrecurring" value="recurring" />Make this a monthly recurring donation
+        </div>
+		
+		<div class="stripe-row">
             <input type="text" autocomplete="off" class="card-number" placeholder="<?php _e('Card Number', 'wp-stripe'); ?> *" required />
         </div>
 

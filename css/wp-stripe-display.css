@@ -224,6 +224,7 @@ textarea.wp-stripe-comment {background: url('../images/h-comment.png') no-repeat
 input.wp-stripe-card-amount {background: url('../images/h-amount.png') no-repeat 8px 8px;}
 input.card-number {background: url('../images/h-card.png') no-repeat 8px 10px;}
 input.card-cvc {background: url('../images/h-cvc.png') no-repeat 8px 10px;}
+input.zip-code {background: url('../images/h-zip.png') no-repeat 8px 8px;}
 
 form#wp-stripe-payment-form select {
         cursor: pointer;
