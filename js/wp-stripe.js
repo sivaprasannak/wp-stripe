@@ -64,7 +64,8 @@ jQuery(document).ready(function($) {
             number: $('.card-number').val(),
             cvc: $('.card-cvc').val(),
             exp_month: $('.card-expiry-month').val(),
-            exp_year: $('.card-expiry-year').val()
+            exp_year: $('.card-expiry-year').val(),
+			address_zip: $('.zip-code').val()
         }, stripeResponseHandler);
 
         // prevent the form from submitting with the default action

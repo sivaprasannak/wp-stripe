@@ -65,6 +65,10 @@ function wp_stripe_form() {
         <div class="stripe-row">
             <input type="text" name="wp_stripe_amount" autocomplete="off" class="wp-stripe-card-amount" id="wp-stripe-card-amount" placeholder="<?php _e('Amount (USD)', 'wp-stripe'); ?> *" required />
         </div>
+		
+		<div class="stripe-row">
+            <input type="text" autocomplete="off" class="zip-code" placeholder="<?php _e('Zip Code', 'wp-stripe'); ?> *" required />
+        </div>
 
         <div class="stripe-row">
             <input type="text" autocomplete="off" class="card-number" placeholder="<?php _e('Card Number', 'wp-stripe'); ?> *" required />
