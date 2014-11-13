@@ -342,3 +342,7 @@ input[type=file]:focus, input[type=checkbox]:focus, select:focus {
         box-shadow: none;
         outline: 1px dotted #666;
 }
+
+.wp-stripe-embedded-frame {
+float: left;
+}

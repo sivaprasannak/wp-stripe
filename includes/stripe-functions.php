@@ -60,6 +60,22 @@ function wp_stripe_embedded_shortcode($atts) {
 
 add_shortcode('wp-stripe-embedded', 'wp_stripe_embedded_shortcode');
 
+function wp_stripe_thermometer_shortcode($atts) {
+	extract(shortcode_atts(array(
+				'campaign' => ''
+					), $atts));
+
+	$custom = get_post_custom($campaign);
+	$raisedOnline = $custom["wp-stripe-campaign-raised"][0];
+    $offlineAmount = $custom["wp-stripe-campaign-offlineamount"][0];
+    $goal = $custom["wp-stripe-campaign-goal"][0];
+    $totalRaised = $raisedOnline + $offlineAmount;
+    
+	return  '<div id="goal-thermometer" data-currentAmount="'.$totalRaised.'" skdaf="hai"  data-goalamount="'.$goal.'" ></div>';
+}
+
+add_shortcode('wp-stripe-thermometer', 'wp_stripe_thermometer_shortcode');
+
 /**
  * Display Legacy Stripe form in-line
  *

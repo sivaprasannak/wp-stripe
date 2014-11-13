@@ -1,8 +1,10 @@
 #goal-thermometer{
+    float:left;
+    top:20px;
     position:relative;
     padding:0;
     font-family:Arial, Helvetica, sans-serif;
-    color:#fff;
+    color:#000;
     font-weight: bold;
     opacity:0;
 }
@@ -22,7 +24,7 @@
 #therm-graphics{
     float:left;
     position:relative;
-    width:46px;
+    width:46px !important;
 }
 
 #therm-top{
@@ -30,29 +32,29 @@
     top:0;
     left:7px;
     
-    width:32px;
-    height:13px;
+    width:32px !important;
+    height:13px !important;
 }
 
 #therm-body-bg{
      position:absolute;
      top:13px;
      left:7px;
-     width:32px;
+     width:32px !important;
 }
 
 #therm-body-mercury{
      position:absolute;
      bottom:51px;
      left:14px;
-     width: 18px;
+     width: 18px !important;
      height:2px;
 }
 
 #therm-body-fore{
      position:absolute;
-     width:24px;
-     top:13px;
+     width:24px !important;
+     top:13px !important;
      left:11px;
      background-repeat:repeat-y;
 }
@@ -60,14 +62,14 @@
 #therm-bottom{
     position:absolute;
     left:0;
-    width:46px;
-    height:51px;
+    width:46px !important;
+    height:51px !important;
 } 
 
 #therm-tooltip{
     position:absolute;
     left:38px;
-    width:200px;
+    width:120px;
 }
 
 #therm-tooltip .tip-left{
